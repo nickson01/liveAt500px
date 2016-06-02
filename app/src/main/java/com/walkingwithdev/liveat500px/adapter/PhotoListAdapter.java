@@ -2,7 +2,11 @@ package com.walkingwithdev.liveat500px.adapter;
 
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
+
+import com.walkingwithdev.liveat500px.R;
 import com.walkingwithdev.liveat500px.dao.PhotoItemCollectionDao;
 import com.walkingwithdev.liveat500px.dao.PhotoItemDao;
 import com.walkingwithdev.liveat500px.view.PhotoListItem;
@@ -13,6 +17,7 @@ import com.walkingwithdev.liveat500px.view.PhotoListItem;
 public class PhotoListAdapter extends BaseAdapter {
 
     private PhotoItemCollectionDao dao;
+    int lastPosition = -1;
 
     public void setDao(PhotoItemCollectionDao dao) {
         this.dao = dao;
@@ -39,6 +44,7 @@ public class PhotoListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         PhotoListItem item;
+
         if (convertView != null) {
             item = (PhotoListItem) convertView;
         } else {
@@ -48,6 +54,15 @@ public class PhotoListAdapter extends BaseAdapter {
         item.setNameText(dao.getCaption());
         item.setDescriptionText(dao.getUserName() + "\n" + dao.getCamera());
         item.setImageUrl(dao.getImageUrl());
+
+        if (position > lastPosition){
+            Animation anim = AnimationUtils.loadAnimation(parent.getContext(),
+                    R.anim.up_from_bottom);
+
+            item.startAnimation(anim);
+            lastPosition = position;
+        }
+
 
         return item;
     }
